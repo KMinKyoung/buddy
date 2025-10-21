@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/buddy?serverTimezone=Asia/Seoul
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8080
+
+jwt:
+  secret: 3TExAqzRHsVn6Fc8Ql41OSaBD0ZoIUw7KGXmhbduLgv9YjWi2CryNJp5etMkfP
