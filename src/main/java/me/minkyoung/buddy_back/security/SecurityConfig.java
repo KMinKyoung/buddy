@@ -10,9 +10,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // ✅ CSRF 비활성화
+                .csrf(csrf -> csrf.disable()) //  CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/posts/**").permitAll() // ✅ 게시글 API는 인증 없이 허용
+                        .requestMatchers("/api/posts/**").permitAll() // 게시글 API는 인증 없이 허용
                         .anyRequest().permitAll()
                 );
 
