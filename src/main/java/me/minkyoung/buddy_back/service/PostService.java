@@ -32,6 +32,7 @@ public class PostService {
         ResponsePostDto response = ResponsePostDto.builder()
                 .title(post.getTitle())
                 .description(post.getDescription())
+                .image_url(post.getImgUrl())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
@@ -39,12 +40,11 @@ public class PostService {
         return response;
     }
 
-
     //글 조회, 추후 로그인 기능 추가 후 작성자까지 조회
     public ResponsePostDto getbyIdPost(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
-        return  ResponsePostDto.builder()
+        return ResponsePostDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .description(post.getDescription())
@@ -54,9 +54,8 @@ public class PostService {
                 .build();
     }
 
-
     //글 목록 조회(오름차순+생성일 순으로 정렬)
-    public Page<ResponsePostDto> getByAllPost(Pageable pageable){
+    public Page<ResponsePostDto> getByAllPost(Pageable pageable) {
 
         Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
 
@@ -72,7 +71,33 @@ public class PostService {
         );
     }
 
-    //글 수정
+    //글 수정, 추후 본인이 작성한 글에 대한 수정이 가능하도록 변경
+    public ResponsePostDto updatePost(Long id, RequestPostDto requestPostDto) {
+        Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+        //(로그인 기능 추가 시 추가) 작성자 본인이 수정 가능하며 예외문 발생 -> 수정이 불가능합니다.
 
-    //글 삭제
+        //제목, 내용, 이미지 수정
+        post.setTitle(requestPostDto.getTitle());
+        post.setDescription(requestPostDto.getDescription());
+        post.setImgUrl(requestPostDto.getImage_url());
+
+        ResponsePostDto response = ResponsePostDto.builder()
+                .title(post.getTitle())
+                .description(post.getDescription())
+                .image_url(post.getImgUrl())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+
+        return response;
+    }
+
+    //글 삭제, 추후 본인이 작성한 글에 대한 삭제만 이뤄지도록 변경
+    public void deletePost(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+
+        //(로그인 기능 추가시 추가) 작성자, 관리자 권한 확인 후 예외문 발생 => ("삭제가 불가능합니다.")
+
+        postRepository.delete(post);
+    }
 }
