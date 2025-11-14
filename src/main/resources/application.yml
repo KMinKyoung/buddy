@@ -1,8 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/buddy?serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/buddy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: root
+    password: root1234
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,4 +14,5 @@ server:
   port: 8080
 
 jwt:
-  secret: 3TExAqzRHsVn6Fc8Ql41OSaBD0ZoIUw7KGXmhbduLgv9YjWi2CryNJp5etMkfP
+  issuer: buddy # 실제 배포 이후 도메인으로 변경 예정
+  secret: buddy-secret-ket # 실제 배포 이후 Base64로 인코딩된 문자열로 변경 예정
