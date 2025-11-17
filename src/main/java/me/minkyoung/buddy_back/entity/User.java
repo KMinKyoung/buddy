@@ -1,13 +1,75 @@
-//package me.minkyoung.buddy_back.entity;
-//
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.Table;
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//
-//@Table(name = "users")
-//@NoArgsConstructor //기본 생성자 생성
-//@Getter
-//@Entity
-//public class User {
-//}
+package me.minkyoung.buddy_back.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import me.minkyoung.buddy_back.domain.Role;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
+@AllArgsConstructor
+@Builder
+@Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Entity
+public class User implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
+    private Long id;
+
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "name")
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override //계정 만료 여부 반환
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override //계정 잠금 여부 반환
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override //패스워드 만료 여부 반환
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override //계정 사용 가능 여부 반환
+    public boolean isEnabled() {
+        return true;
+    }
+
+}
