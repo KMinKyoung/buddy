@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -21,8 +22,8 @@ public class PostController {
 
     //생성
     @PostMapping("")
-    public ResponseEntity createPost(@RequestBody RequestPostDto requestPostDto) {
-        ResponsePostDto responsePostDto = postService.createPost(requestPostDto);
+    public ResponseEntity createPost(@RequestBody RequestPostDto requestPostDto, Authentication authentication) {
+        ResponsePostDto responsePostDto = postService.createPost(requestPostDto,authentication);
         return ResponseEntity.ok().body(responsePostDto);
     }
 
@@ -46,15 +47,15 @@ public class PostController {
 
     //수정
     @PutMapping("/{postId}")
-    public ResponseEntity updatePost(@PathVariable Long postId, @RequestBody RequestPostDto requestPostDto) {
-        ResponsePostDto responsePostDto = postService.updatePost(postId, requestPostDto);
+    public ResponseEntity updatePost(@PathVariable Long postId, @RequestBody RequestPostDto requestPostDto, Authentication authentication) {
+        ResponsePostDto responsePostDto = postService.updatePost(postId, requestPostDto,authentication);
         return ResponseEntity.ok().body(responsePostDto);
     }
 
     //삭제
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, Authentication authentication) {
+        postService.deletePost(postId,authentication);
         return  ResponseEntity.ok().build();
     }
 }

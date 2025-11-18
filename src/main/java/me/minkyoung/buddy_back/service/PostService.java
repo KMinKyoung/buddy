@@ -6,9 +6,12 @@ import lombok.RequiredArgsConstructor;
 import me.minkyoung.buddy_back.dto.RequestPostDto;
 import me.minkyoung.buddy_back.dto.ResponsePostDto;
 import me.minkyoung.buddy_back.entity.Post;
+import me.minkyoung.buddy_back.entity.User;
 import me.minkyoung.buddy_back.repository.PostRepository;
+import me.minkyoung.buddy_back.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,15 +20,23 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    // 글 조회 ,글 생성, 글 수정, 글 삭제
+    // 글 조회 ,글 생성, 글 수정, 글 삭제 기능
 
-    //글 생성 -> 유저 값 받아오기 + 이미지 처리 추후에
-    public ResponsePostDto createPost(RequestPostDto requestPostDto) {
+    //글 생성 -> 이미지 처리 추후에
+    public ResponsePostDto createPost(RequestPostDto requestPostDto, Authentication authentication) {
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
         Post post = Post.builder()
                 .title(requestPostDto.getTitle())
                 .description(requestPostDto.getDescription())
                 .build();
+
+        post.setUser(user);
 
         postRepository.save(post);
 
@@ -40,7 +51,7 @@ public class PostService {
         return response;
     }
 
-    //글 조회, 추후 로그인 기능 추가 후 작성자까지 조회
+    //글 조회
     public ResponsePostDto getbyIdPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
@@ -72,9 +83,17 @@ public class PostService {
     }
 
     //글 수정, 추후 본인이 작성한 글에 대한 수정이 가능하도록 변경
-    public ResponsePostDto updatePost(Long id, RequestPostDto requestPostDto) {
+    public ResponsePostDto updatePost(Long id, RequestPostDto requestPostDto, Authentication  authentication) {
         Post post = postRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 게시물입니다."));
-        //(로그인 기능 추가 시 추가) 작성자 본인이 수정 가능하며 예외문 발생 -> 수정이 불가능합니다.
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        //본인 확인
+        if(!post.getUser().getId().equals(user.getId())) {
+            throw new org.springframework.security.access.AccessDeniedException("해당 게시물을 수정할 수 없습니다.");
+        }
 
         //제목, 내용, 이미지 수정
         post.setTitle(requestPostDto.getTitle());
@@ -92,11 +111,18 @@ public class PostService {
         return response;
     }
 
-    //글 삭제, 추후 본인이 작성한 글에 대한 삭제만 이뤄지도록 변경
-    public void deletePost(Long id) {
+    //글 삭제, 추후 관리자도 삭제 가능하도록
+    public void deletePost(Long id,Authentication authentication) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
 
-        //(로그인 기능 추가시 추가) 작성자, 관리자 권한 확인 후 예외문 발생 => ("삭제가 불가능합니다.")
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                        .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        //본인 확인
+        if(!post.getUser().getId().equals(user.getId())) {
+            throw new org.springframework.security.access.AccessDeniedException("해당 게시물을 삭제할 수 없습니다.");
+        }
 
         postRepository.delete(post);
     }

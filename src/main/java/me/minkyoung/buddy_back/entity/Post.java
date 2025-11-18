@@ -23,6 +23,9 @@ public class Post {
     private int id;
 
     // 유저_id를 외래키로 받기
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "title") //제목
     private String title;
