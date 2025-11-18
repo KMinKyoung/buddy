@@ -6,7 +6,6 @@ import me.minkyoung.buddy_back.domain.Role;
 import me.minkyoung.buddy_back.dto.SignUpRequestDto;
 import me.minkyoung.buddy_back.entity.User;
 import me.minkyoung.buddy_back.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    //회원가입
     public Long signup(SignUpRequestDto signUpRequestDto){
 
         if(userRepository.existsByEmail(signUpRequestDto.getEmail())){
@@ -33,8 +33,10 @@ public class UserService {
         return userRepository.save(user).getId();
     }
 
+
     public User findById(Long userId){
         return userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
+
 }

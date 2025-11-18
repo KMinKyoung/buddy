@@ -15,4 +15,4 @@ server:
 
 jwt:
   issuer: buddy # 실제 배포 이후 도메인으로 변경 예정
-  secret: buddy-secret-ket # 실제 배포 이후 Base64로 인코딩된 문자열로 변경 예정
+  secret-key: YnVkZHktc2VjcmV0LWtleS1pcy12YWxpZC1kYXRhLWJ1dC1kaldqZmtyaA==

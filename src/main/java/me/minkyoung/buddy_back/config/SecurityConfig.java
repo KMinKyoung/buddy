@@ -27,8 +27,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) //  CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/oauth/**","/user/signup").permitAll() //로그인/회원가입, ㅐ며소 emd gjdyd
-                        .requestMatchers(HttpMethod.GET,"/api/posts/**").permitAll() // 게시글 API는 인증 없이 허용
+                        .requestMatchers("/auth/**", "/oauth/**","/user/signup", "/user/login").permitAll() //로그인/회원가입, ㅐ며소 emd gjdyd
+                        .requestMatchers(HttpMethod.GET,"/api/posts/**").permitAll() // 글 조회는 인증 없이 허용
                         .anyRequest().authenticated()
                 )
                 //매 요청마다 JWT 토큰 검사
