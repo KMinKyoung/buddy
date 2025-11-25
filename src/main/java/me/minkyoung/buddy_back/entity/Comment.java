@@ -2,6 +2,9 @@ package me.minkyoung.buddy_back.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //자동증가
@@ -30,8 +34,11 @@ public class Comment {
     @Column(name = "description")
     private String description;
 
+    @CreatedDate
     @Column(name = "created_at") //생성일
     private LocalDateTime createdAt;
 
-    //댓글 수정일이 필요할까?
+    @LastModifiedDate //수정 시 자동 갱신
+    @Column(name = "updated_at") //수정 년,월,일
+    private LocalDateTime updatedAt;
 }

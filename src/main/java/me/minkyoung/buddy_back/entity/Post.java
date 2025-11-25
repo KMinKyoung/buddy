@@ -20,7 +20,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //pk 설정 및 id 자동 증가
-    private int id;
+    private Long id;
 
     // 유저_id를 외래키로 받기
     @ManyToOne(fetch = FetchType.LAZY)
