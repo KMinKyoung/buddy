@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class ResponsePostDto {
 
     //로그인, 회원가입 추가 시 작성자 id를 가져와서 인증,인가를 포함시켜야함
-    private int id;
+    private Long id;
     private String title;
     private String description;
     private String image_url;
