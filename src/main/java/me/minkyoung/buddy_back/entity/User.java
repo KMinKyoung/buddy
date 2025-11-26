@@ -2,11 +2,13 @@ package me.minkyoung.buddy_back.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import me.minkyoung.buddy_back.domain.PenaltyStatus;
 import me.minkyoung.buddy_back.domain.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,7 +37,13 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(name = "current_penalty_status",nullable = false)
+    private PenaltyStatus currentPenaltyStatus = PenaltyStatus.NONE;
 
+    @Column(name = "penalty_end_at")
+    private LocalDateTime penaltyEndAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
