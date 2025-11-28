@@ -3,7 +3,6 @@ package me.minkyoung.buddy_back.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.minkyoung.buddy_back.domain.ReportType;
-import me.minkyoung.buddy_back.entity.User;
 
 @Getter
 @NoArgsConstructor

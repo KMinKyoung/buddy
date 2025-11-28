@@ -44,5 +44,5 @@ public class Report {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     @Column(name = "status")
-    private ReportStatus status = ReportStatus.COUNTED;
+    private ReportStatus status = ReportStatus.PENDING;
 }
