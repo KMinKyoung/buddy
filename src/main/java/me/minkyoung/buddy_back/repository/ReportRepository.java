@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    Page<Report> findAll(Pageable pageable); //관리자를 위한신고 전체 확인
+
     Page<Report> findByStatus(ReportStatus status, Pageable pageable); //상태별로 필터링해서 확인(Pending)
+
+    boolean existsByReporterIdAndReportedUserIdAndReportType(Long reporterId,Long targetUserId, ReportType reportType);
 }
