@@ -26,6 +26,10 @@ public class Penalty {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY) //어떤 신고때문에 제재가 생겼는지 확인하는 용도
+    @JoinColumn(name = "report_id", nullable = false)
+    private Report report;
+
     @Column(name = "reason", length = 500)
     private String reason; //관리자가 확인하는 용도
 
@@ -43,5 +47,4 @@ public class Penalty {
     @Column(name = "created_at", updatable = false) //생성 년,월,일
     private LocalDateTime createdAt;
 
-    //나중에 생각해보아야할 추가 방향 -> 제재 상세 페이지에서 연결된 신고 목록을 바로 보고싶으면 추가
 }
