@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class ReportService {
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
+    private final PenaltyService penaltyService;
 
     //신고 생성, 전체 및 상세 조회(관리자)
 
@@ -42,10 +43,14 @@ public class ReportService {
         );
 
 
-        //하루를 간격으로 리셋되도록 만들어야하나??
+        //3일을 간격으로 리셋되도록 수정
         if(exists){
             throw new IllegalArgumentException("이미 동일한 내용으로 신고한 이력이 존재합니다.");
         }
+
+        //applyPenaltyRules 적용 -> 기준치를 넘을 경우 패널티엔티티 생성
+        penaltyService.applyPenaltyRules(targetUser);
+
 
         //신고 엔터티 생성
         Report report = Report.builder()
