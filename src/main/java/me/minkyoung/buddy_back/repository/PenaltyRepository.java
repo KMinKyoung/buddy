@@ -12,5 +12,6 @@ public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
     long countByUserAndPenaltyStatus(User user, PenaltyStatus penaltyStatus);
 
     //유저의 제재 이력 중 가장 최근 것(현재 상태 판단용도)
-    Optional<Penalty> findToByUserOrderByCreatedAtDesc();
+    Optional<Penalty> findTopByUserOrderByCreatedAtDesc(User user);
+    // 위에것들은 보류
 }

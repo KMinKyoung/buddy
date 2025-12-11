@@ -45,6 +45,11 @@ public class User implements UserDetails {
     @Column(name = "penalty_end_at")
     private LocalDateTime penaltyEndAt;
 
+    public void updatePenaltyStatus(PenaltyStatus penaltyStatus, LocalDateTime endAt) {
+        this.currentPenaltyStatus = penaltyStatus;
+        this.penaltyEndAt = endAt;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import me.minkyoung.buddy_back.domain.ReportStatus;
 import me.minkyoung.buddy_back.domain.ReportType;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "report")
@@ -45,4 +48,9 @@ public class Report {
     @Builder.Default
     @Column(name = "status")
     private ReportStatus status = ReportStatus.PENDING;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
 }

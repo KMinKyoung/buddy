@@ -48,10 +48,6 @@ public class ReportService {
             throw new IllegalArgumentException("이미 동일한 내용으로 신고한 이력이 존재합니다.");
         }
 
-        //applyPenaltyRules 적용 -> 기준치를 넘을 경우 패널티엔티티 생성
-        penaltyService.applyPenaltyRules(targetUser);
-
-
         //신고 엔터티 생성
         Report report = Report.builder()
                 .reporter(reporter)
@@ -62,7 +58,9 @@ public class ReportService {
                 .build();
         //saved으로 db에 저장
         reportRepository.save(report);
-        //추후 자동 제재 로직 호출
+
+        //제재 적용
+        penaltyService.applyPenaltyRules(targetUser.getId());
 
     }
 

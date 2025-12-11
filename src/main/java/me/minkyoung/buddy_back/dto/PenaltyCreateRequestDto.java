@@ -1,5 +1,7 @@
 package me.minkyoung.buddy_back.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.minkyoung.buddy_back.domain.PenaltyStatus;
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PenaltyCreateRequestDto {
     //수동적으로 제재를 줄때 이용
     private Long userId;
