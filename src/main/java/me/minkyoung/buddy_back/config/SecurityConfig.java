@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) //  CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/oauth/**","/user/signup", "/user/login").permitAll() //로그인/회원가입, ㅐ며소 emd gjdyd
-                        .requestMatchers(HttpMethod.GET,"/api/posts/**").permitAll() // 글 조회는 인증 없이 허용
+                        .requestMatchers(HttpMethod.GET,"/api/posts/**","/api/posts/{postId}/comments").permitAll() // 글 조회는 인증 없이 허용
                         .anyRequest().authenticated()
                 )
                 //매 요청마다 JWT 토큰 검사
@@ -47,4 +48,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
