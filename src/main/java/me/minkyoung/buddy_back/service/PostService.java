@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional //트랜잭션 단위로 처리
@@ -21,10 +22,11 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final OciPostImageService  ociPostImageService;
 
     // 글 조회 ,글 생성, 글 수정, 글 삭제 기능
 
-    //글 생성 -> 이미지 처리 추후에
+    //글 생성
     public ResponsePostDto createPost(RequestPostDto requestPostDto, Authentication authentication) {
 
         String email = authentication.getName();
@@ -41,6 +43,7 @@ public class PostService {
         postRepository.save(post);
 
         ResponsePostDto response = ResponsePostDto.builder()
+                .id(post.getId())
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .image_url(post.getImgUrl())
@@ -101,6 +104,7 @@ public class PostService {
         post.setImgUrl(requestPostDto.getImage_url());
 
         ResponsePostDto response = ResponsePostDto.builder()
+                .id(post.getId())
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .image_url(post.getImgUrl())
@@ -126,4 +130,64 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    public ResponsePostDto uploadPostImage(Long postId, MultipartFile file, Authentication authentication) throws Exception {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        //이미지 업로드 문제 확인용
+        System.out.println("[UPLOAD] auth=" + (authentication == null ? "null" : authentication.getName()));
+        System.out.println("[UPLOAD] postUserId=" + post.getUser().getId() + ", loginUserId=" + user.getId());
+
+
+        if (!post.getUser().getId().equals(user.getId())) {
+            throw new org.springframework.security.access.AccessDeniedException("해당 게시물의 이미지를 수정할 수 없습니다.");
+        }
+
+        if (file == null || file.isEmpty()) throw new IllegalArgumentException("파일이 없습니다.");
+        if (file.getContentType() == null || !file.getContentType().startsWith("image/")) {
+            throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+        }
+
+        String objectKey = ociPostImageService.upload(postId, file);
+        post.setImgUrl(objectKey); // DB에는 objectKey 저장
+
+
+
+        return toResponse(post);
+    }
+
+    public String getPostImageParUrl(Long postId) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시물입니다."));
+
+        if (post.getImgUrl() == null || post.getImgUrl().isBlank()) {
+            throw new IllegalArgumentException("이미지가 없습니다.");
+        }
+        return ociPostImageService.createReadParUrl(post.getImgUrl());
+    }
+
+    // 공통 응답 변환(핵심: objectKey 대신 조회용 URL 내려주기)
+    private ResponsePostDto toResponse(Post post) {
+        String imageUrl = (post.getImgUrl() == null || post.getImgUrl().isBlank())
+                ? null
+                : "/api/posts/" + post.getId() + "/image";
+
+        return ResponsePostDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .description(post.getDescription())
+                .image_url(imageUrl)
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+    }
+
 }

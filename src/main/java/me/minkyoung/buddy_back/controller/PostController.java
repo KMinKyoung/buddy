@@ -8,9 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController //Rest API 요청 컨트롤러
@@ -57,5 +59,24 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, Authentication authentication) {
         postService.deletePost(postId,authentication);
         return  ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{postId}/image")
+    public ResponseEntity<ResponsePostDto> uploadImage(
+            @PathVariable Long postId,
+            @RequestPart("file") MultipartFile file,
+            Authentication authentication
+    ) throws Exception {
+        ResponsePostDto dto = postService.uploadPostImage(postId, file, authentication);
+        return ResponseEntity.ok(dto);
+    }
+
+    // 브라우저에서 바로 보이게: 302 redirect
+    @GetMapping("/{postId}/image")
+    public ResponseEntity<Void> viewImage(@PathVariable Long postId) {
+        String parUrl = postService.getPostImageParUrl(postId);
+        return ResponseEntity.status(302)
+                .header(HttpHeaders.LOCATION, parUrl)
+                .build();
     }
 }
