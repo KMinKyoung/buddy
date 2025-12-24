@@ -29,14 +29,14 @@ public class CommentController {
     }
 
     @PutMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long postId, @PathVariable Long commentsId, @RequestBody CommentRequest request, Authentication authentication){
-        CommentResponse response = commentService.updateComment(postId,commentsId,request,authentication);
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentRequest request, Authentication authentication){
+        CommentResponse response = commentService.updateComment(postId,commentId,request,authentication);
         return  ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long postId, @PathVariable Long commentsId, Authentication authentication){
-        commentService.deleteComment(postId,commentsId,authentication);
+    public ResponseEntity<Void> deleteComment(@PathVariable Long postId, @PathVariable Long commentId, Authentication authentication){
+        commentService.deleteComment(postId,commentId,authentication);
         return ResponseEntity.ok().build();
     }
 }

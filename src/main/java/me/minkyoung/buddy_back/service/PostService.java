@@ -44,6 +44,8 @@ public class PostService {
 
         ResponsePostDto response = ResponsePostDto.builder()
                 .id(post.getId())
+                .user_id(post.getUser().getId())
+                .name(post.getUser().getName())
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .image_url(post.getImgUrl())
@@ -60,6 +62,8 @@ public class PostService {
 
         return ResponsePostDto.builder()
                 .id(post.getId())
+                .user_id(post.getUser().getId())
+                .name(post.getUser().getName())
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .image_url(post.getImgUrl())
@@ -76,6 +80,8 @@ public class PostService {
         return posts.map(post ->
                 ResponsePostDto.builder()
                         .id(post.getId())
+                        .user_id(post.getUser().getId())
+                        .name(post.getUser().getName())
                         .title(post.getTitle())
                         .description(post.getDescription())
                         .image_url(post.getImgUrl())
@@ -105,6 +111,8 @@ public class PostService {
 
         ResponsePostDto response = ResponsePostDto.builder()
                 .id(post.getId())
+                .user_id(post.getUser().getId())
+                .name(post.getUser().getName())
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .image_url(post.getImgUrl())
@@ -182,6 +190,8 @@ public class PostService {
 
         return ResponsePostDto.builder()
                 .id(post.getId())
+                .user_id(post.getUser().getId())
+                .name(post.getUser().getName())
                 .title(post.getTitle())
                 .description(post.getDescription())
                 .image_url(imageUrl)
