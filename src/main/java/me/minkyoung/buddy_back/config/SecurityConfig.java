@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 
 @Configuration
@@ -35,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/posts/*/comments").authenticated() //이후로는 인증이 있어야지..명시적으로 수정
                         .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 //매 요청마다 JWT 토큰 검사
@@ -59,4 +61,5 @@ public class SecurityConfig {
         return (web) -> web.ignoring()
                 .requestMatchers("/api/oci/**", "/oci/**");
     }
+
 }

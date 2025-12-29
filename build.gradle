@@ -43,6 +43,8 @@ dependencies {
     implementation 'com.oracle.oci.sdk:oci-java-sdk-objectstorage:3.71.0'
     implementation "com.oracle.oci.sdk:oci-java-sdk-common:3.71.0"
     implementation "com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey3:3.71.0"//오라클 http 요청
+    //web socket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
