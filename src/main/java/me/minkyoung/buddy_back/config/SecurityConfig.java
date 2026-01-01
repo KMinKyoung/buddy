@@ -28,7 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) //  CSRF 비활성화
+                .csrf(csrf -> csrf.disable())//  CSRF 비활성화
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/oauth/**","/user/signup", "/user/login").permitAll() //로그인/회원가입, ㅐ며소 emd gjdyd
                         .requestMatchers(HttpMethod.GET,"/api/posts/**","/api/posts/{postId}/comments").permitAll()
@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*").authenticated()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
+                        .requestMatchers("/ws-stomp/**").permitAll()
+                        .requestMatchers("/api/chat/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 //매 요청마다 JWT 토큰 검사
