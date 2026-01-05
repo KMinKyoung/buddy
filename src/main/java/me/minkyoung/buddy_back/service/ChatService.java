@@ -188,7 +188,7 @@ public class ChatService {
                 .createdAt(saved.getCreatedAt())
                 .build();
 
-        simpMessagingTemplate.convertAndSend("/subscribe/rooms/" + roomId, response);
+        simpMessagingTemplate.convertAndSend("/topic/rooms/" + roomId, response);
 
         return response;
     }
