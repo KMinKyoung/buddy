@@ -11,5 +11,5 @@ public interface ChatMessageRepository extends JpaRepository<Chat_Message,Long> 
     //1. 방 히스토리 조회
     Page<Chat_Message> findByRoomIdOrderByCreatedAtAsc(Long roomId, Pageable pageable);
     //2. 마지막 메시지 1개 조회(방 목록용)
-    Optional<Chat_Message> findByRoomIdOrderByCreatedAtDesc(Long roomId);
+    Optional<Chat_Message> findFirstByRoomIdOrderByCreatedAtDesc(Long roomId);
 }

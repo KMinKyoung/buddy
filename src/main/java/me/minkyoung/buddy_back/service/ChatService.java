@@ -96,7 +96,7 @@ public class ChatService {
                         .build())
                 .orElseGet(() -> {
                     Chat_Room savedRoom = chatRoomRepository.save(
-                            Chat_Room.builder().type(RoomType.DIRECT).name(null).build()
+                            Chat_Room.builder().type(RoomType.DIRECT).name(target.getName()).build()
                     );
 
                     chatRoomMemberRepository.saveAll(List.of(
@@ -248,7 +248,7 @@ public class ChatService {
             Chat_Room room = roomMap.get(roomId);
             if (room == null) continue;
 
-            Optional<Chat_Message> lastOpt = chatMessageRepository.findByRoomIdOrderByCreatedAtDesc(roomId);
+            Optional<Chat_Message> lastOpt = chatMessageRepository.findFirstByRoomIdOrderByCreatedAtDesc(roomId);
 
             String lastMessage = lastOpt.map(Chat_Message::getContent).orElse(null);
             var lastAt = lastOpt.map(Chat_Message::getCreatedAt).orElse(null);
@@ -271,6 +271,7 @@ public class ChatService {
 
         return items;
     }
+
 
     // ----- 검증 및 조회를 위한 메서드 -----
 
