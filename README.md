@@ -1,7 +1,7 @@
 ﻿# BUDDY READ ME
 <img width="716" height="581" alt="Image" src="https://github.com/user-attachments/assets/107f540b-3b2a-44db-b4e5-063ee4ff300e" />
 
-※ 현재 업데이트 문제로 간단 확인(웹)은 일부분 기능이 적용되지 못했습니다. 앱을 다운할 경우 문제 없이 현재까지 구현된 모든 기능을 즐길 수 있습니다.
+※ 앱을 다운할 경우 현재까지 구현된 모든 기능을 즐길 수 있기에 앱 버전을 권장합니다.
 - 프로젝트 간단 확인(웹) : http://134.185.118.165/
 - 앱으로 확인 : https://drive.google.com/file/d/1IgCEUIqn0-lRNOlwlRHAhG-Rh9f7UKbR/view?usp=drive_link
 + 확인용 유저 아이디 : user@example.com, 비밀번호 : test1234!
@@ -309,4 +309,5 @@
 
 
 <br/>
+
 
