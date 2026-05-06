@@ -18,4 +18,6 @@ public class ResponsePostDto {
     private String image_url;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long likeCount;
+    private Boolean likedByMe;
 }

@@ -15,14 +15,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @Service
 @Transactional //트랜잭션 단위로 처리
 @RequiredArgsConstructor
+
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final OciPostImageService  ociPostImageService;
+    private final Optional<OciPostImageService>  ociPostImageService;
 
     // 글 조회 ,글 생성, 글 수정, 글 삭제 기능
 
@@ -163,7 +166,9 @@ public class PostService {
             throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
         }
 
-        String objectKey = ociPostImageService.upload(postId, file);
+        //String objectKey = ociPostImageService.upload(postId, file);->아래 지우고 원래대로 돌리기
+        String objectKey = ociPostImageService.orElseThrow(()->new IllegalArgumentException("OCI업로드는 로컬에서 불가능합니다."))
+                        .upload(postId,file);
         post.setImgUrl(objectKey); // DB에는 objectKey 저장
 
 
@@ -179,7 +184,9 @@ public class PostService {
         if (post.getImgUrl() == null || post.getImgUrl().isBlank()) {
             throw new IllegalArgumentException("이미지가 없습니다.");
         }
-        return ociPostImageService.createReadParUrl(post.getImgUrl());
+        //return ociPostImageService.createReadParUrl(post.getImgUrl()); -> 아래 지우고 원래대로
+        return ociPostImageService
+                .orElseThrow(()->new IllegalArgumentException("로컬에서 불가능")).createReadParUrl(post.getImgUrl());
     }
 
     // 공통 응답 변환(핵심: objectKey 대신 조회용 URL 내려주기)

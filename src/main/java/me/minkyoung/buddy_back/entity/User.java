@@ -45,6 +45,9 @@ public class User implements UserDetails {
     @Column(name = "penalty_end_at")
     private LocalDateTime penaltyEndAt;
 
+    private String provider;
+    private String providerId;
+
     public void updatePenaltyStatus(PenaltyStatus penaltyStatus, LocalDateTime endAt) {
         this.currentPenaltyStatus = penaltyStatus;
         this.penaltyEndAt = endAt;

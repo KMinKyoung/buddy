@@ -55,4 +55,9 @@ public class UserController {
     }
 
     //내가 좋아요한 글 가져오기
+    @GetMapping(value = "/posts/likes", produces = "application/json")
+    public ResponseEntity<Page<MyPostLikeResponseDto>> myLikedPosts(Pageable pageable, Authentication authentication){
+        Page<MyPostLikeResponseDto> result = myPageService.getMyLikePosts(pageable,authentication);
+        return ResponseEntity.ok(result);
+    }
 }

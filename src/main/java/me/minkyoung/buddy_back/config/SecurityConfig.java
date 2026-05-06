@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                         .requestMatchers("/ws-stomp/**").permitAll()
                         .requestMatchers("/api/chat/**").authenticated()
+                        .requestMatchers("/api/auth/**").permitAll() //구글 로그인
                         .anyRequest().authenticated()
                 )
                 //매 요청마다 JWT 토큰 검사

@@ -15,4 +15,6 @@ public class CommentResponse {
     private String description;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
+    private Long likeCount;
+    private Boolean likedByMe;
 }
