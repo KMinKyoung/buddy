@@ -30,7 +30,8 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final Optional<OciPostImageService> ociPostImageService;
+   //서버 수정 후 되돌리기 private final Optional<OciPostImageService> ociPostImageService;
+    private final OciPostImageService ociPostImageService;
     private final PostLikeRepository postLikeRepository;
 
     //내 글 조회

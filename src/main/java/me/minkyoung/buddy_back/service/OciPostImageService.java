@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Profile("Prod")
+//@Profile("Prod") 되돌리기
 public class OciPostImageService {
 
     private final ObjectStorageClient objectStorageClient;
