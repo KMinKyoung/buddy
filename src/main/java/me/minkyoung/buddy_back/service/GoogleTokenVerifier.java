@@ -25,30 +25,6 @@ public class GoogleTokenVerifier {
             idTokenString = idTokenString.trim();
             String clientId = webClientId.trim();
 
-            GoogleIdToken parsedToken = GoogleIdToken.parse(
-                    GsonFactory.getDefaultInstance(),
-                    idTokenString
-            );
-
-            GoogleIdToken.Payload parsedPayload = parsedToken.getPayload();
-
-            String tokenAud = parsedPayload.getAudience().toString();
-
-            System.out.println("백엔드 webClientId = [" + clientId + "]");
-            System.out.println("백엔드 webClientId 길이 = " + clientId.length());
-            System.out.println("토큰 aud = [" + tokenAud + "]");
-            System.out.println("토큰 aud 길이 = " + tokenAud.length());
-            System.out.println("aud 일치 여부 = " + tokenAud.equals(clientId));
-            System.out.println("issuer = [" + parsedPayload.getIssuer() + "]");
-            System.out.println("email = [" + parsedPayload.getEmail() + "]");
-            System.out.println("exp = [" + parsedPayload.getExpirationTimeSeconds() + "]");
-            System.out.println("iat = [" + parsedPayload.getIssuedAtTimeSeconds() + "]");
-            System.out.println("현재 시간 = [" + (System.currentTimeMillis() / 1000) + "]");
-            String tokenInfoUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idTokenString;
-
-            String tokenInfoResult = new RestTemplate().getForObject(tokenInfoUrl, String.class);
-
-            System.out.println("Google tokeninfo 결과 = " + tokenInfoResult);
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),
                     GsonFactory.getDefaultInstance()
@@ -65,9 +41,20 @@ public class GoogleTokenVerifier {
             if (idToken == null) {
                 throw new IllegalArgumentException("유효하지 않은 Google ID 토큰입니다.");
             }
-            return idToken.getPayload();
+
+            GoogleIdToken.Payload payload = idToken.getPayload();
+
+            System.out.println("Google 토큰 검증 성공");
+            System.out.println("aud = [" + payload.getAudience() + "]");
+            System.out.println("issuer = [" + payload.getIssuer() + "]");
+            System.out.println("email = [" + payload.getEmail() + "]");
+            System.out.println("exp = [" + payload.getExpirationTimeSeconds() + "]");
+            System.out.println("현재 시간 = [" + (System.currentTimeMillis() / 1000) + "]");
+
+            return payload;
+
         } catch (Exception e) {
-            throw new IllegalArgumentException("Google 토큰 검증 실패",e);
+            throw new IllegalArgumentException("Google 토큰 검증 실패", e);
         }
 
     }
