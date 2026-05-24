@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                         .requestMatchers("/ws-stomp/**").permitAll()
                         .requestMatchers("/api/chat/**").authenticated()
+                        .requestMatchers("/api/walk-records").authenticated()
                         .requestMatchers(HttpMethod.POST,"/api/auth/google").permitAll() //구글 로그인
                         .anyRequest().authenticated()
                 )
