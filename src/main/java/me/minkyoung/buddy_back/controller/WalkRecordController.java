@@ -2,13 +2,11 @@ package me.minkyoung.buddy_back.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.minkyoung.buddy_back.dto.WalkRecordSaveRequest;
+import me.minkyoung.buddy_back.dto.WalkTodayResponseDto;
 import me.minkyoung.buddy_back.service.WalkRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -27,5 +25,11 @@ public class WalkRecordController {
                 "message", "걷기 기록 저장 성공",
                 "walkRecordId", walkRecordId
         ));
+    }
+
+    @GetMapping("/walk-records/today")
+    public ResponseEntity<WalkTodayResponseDto> getTodaySteps(Authentication authentication) {
+        WalkTodayResponseDto responseDto = walkRecordService.getTodaySteps(authentication);
+        return ResponseEntity.ok(responseDto);
     }
 }
