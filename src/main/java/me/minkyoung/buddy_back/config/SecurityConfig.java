@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
                         .requestMatchers("/ws-stomp/**").permitAll()
                         .requestMatchers("/api/chat/**").authenticated()
-                        .requestMatchers("/api/walk-records").authenticated()
+                        .requestMatchers("/api/walk-records", "/api/walk-records/**", "/api/steps/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/api/auth/google").permitAll() //구글 로그인
                         .anyRequest().authenticated()
                 )
