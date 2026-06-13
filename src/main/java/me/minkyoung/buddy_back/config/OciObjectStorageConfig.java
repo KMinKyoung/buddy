@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-//@Profile("prod")
+//@Profile("prod") //서버 배포후 지워서 다시
 public class OciObjectStorageConfig {
 
     @Value("${oci.region}")

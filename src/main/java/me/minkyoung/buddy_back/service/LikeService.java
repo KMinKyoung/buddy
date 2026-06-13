@@ -1,8 +1,8 @@
 package me.minkyoung.buddy_back.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.minkyoung.buddy_back.dto.LikeToggleResponseDto;
+import me.minkyoung.buddy_back.dto.ResponsePostDto;
 import me.minkyoung.buddy_back.entity.Post;
 import me.minkyoung.buddy_back.entity.PostsLikes;
 import me.minkyoung.buddy_back.entity.User;
@@ -10,9 +10,12 @@ import me.minkyoung.buddy_back.repository.CommentLikeRepository;
 import me.minkyoung.buddy_back.repository.PostLikeRepository;
 import me.minkyoung.buddy_back.repository.PostRepository;
 import me.minkyoung.buddy_back.repository.UserRepository;
+import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -32,18 +35,27 @@ public class LikeService {
         //2. 존재하는 게시글인지 예외 처리
         Post post = postRepository.findById(postId)
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시물입니다."));
-        //3. assertPostNotLiked 예외 불러오기
-        assertPostNotLiked(user.getId(), postId);
-        //4. 저장 후 likeCount 재계산(count)
-        PostsLikes likes = PostsLikes.builder()
-                .user(user)
-                .post(post)
-                .build();
-        postLikeRepository.save(likes);
+
+        boolean alraedyLiked = postLikeRepository.existsByUserIdAndPostId(user.getId(), postId);
+
+        //3. 좋아요 여부 확인
+        if(alraedyLiked){
+            //3-1. 이미 있으면 취소
+            postLikeRepository.deleteByUserIdAndPostId(user.getId(), postId);
+        }else {
+            //3-2. 좋아요가 없으면 생성
+            //저장 후 likeCount 재계산(count)
+            PostsLikes likes = PostsLikes.builder()
+                    .user(user)
+                    .post(post)
+                    .build();
+            postLikeRepository.save(likes);
+        }
+
         //5. 응답 DTO(liked, likeCount) 반환
         long likeCount = postLikeRepository.countByPostId(postId);
         return LikeToggleResponseDto.builder()
-                .liked(true)
+                .liked(!alraedyLiked)
                 .likeCount(likeCount)
                 .build();
     }
@@ -57,13 +69,11 @@ public class LikeService {
        postRepository.findById(postId)
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 게시물입니다."));
 
-        //3. 내가 누른 좋아요 글인지 여부 확인(내 좋아요 여부 내부 메서드에서 예외처리)
-        assertPostLiked(user.getId(),postId);
-        //4. 모든 예외처리가 다 지나갓을 경우 delete처리
+        //3. 좋아요가 있으면 삭제, 없으면 그냥 통과
         postLikeRepository.deleteByUserIdAndPostId(user.getId(),postId);
-        //5. likeCount 재계산
+        //4. likeCount 재계산
         long likeCount = postLikeRepository.countByPostId(postId);
-        //6. 응답 DTO로 반환
+        //5. 응답 DTO로 반환
         return LikeToggleResponseDto.builder()
                 .liked(false)
                 .likeCount(likeCount)
@@ -84,6 +94,9 @@ public class LikeService {
             throw new IllegalArgumentException("좋아요가 존재하지 않습니다.");
         }
     }
+
+
+
     //댓글 좋아요
 
     //댓글 좋아요 취소

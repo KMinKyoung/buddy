@@ -7,15 +7,18 @@ import me.minkyoung.buddy_back.dto.RequestPostDto;
 import me.minkyoung.buddy_back.dto.ResponsePostDto;
 import me.minkyoung.buddy_back.entity.Post;
 import me.minkyoung.buddy_back.entity.User;
+import me.minkyoung.buddy_back.repository.PostLikeRepository;
 import me.minkyoung.buddy_back.repository.PostRepository;
 import me.minkyoung.buddy_back.repository.UserRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional //트랜잭션 단위로 처리
@@ -25,8 +28,9 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    //배포후 다시 이걸로 private final Optional<OciPostImageService>  ociPostImageService;
-    private final OciPostImageService  ociPostImageService;
+    //private final Optional<OciPostImageService>  ociPostImageService;
+   private final OciPostImageService  ociPostImageService;//원문
+    private final PostLikeRepository postLikeRepository;
 
     // 글 조회 ,글 생성, 글 수정, 글 삭제 기능
 
@@ -77,12 +81,49 @@ public class PostService {
     }
 
     //글 목록 조회(오름차순+생성일 순으로 정렬)
-    public Page<ResponsePostDto> getByAllPost(Pageable pageable) {
+    public Page<ResponsePostDto> getByAllPost(Pageable pageable,Authentication authentication) {
 
         Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        List<Post> postsList = posts.getContent();
 
-        return posts.map(post ->
-                ResponsePostDto.builder()
+        if (postsList.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        List<Long> postIds = postsList.stream()
+                .map(Post::getId)
+                .toList();
+
+        // 1. 좋아요 개수는 로그인 여부와 상관없이 모두 조회
+        Map<Long, Long> likeCountMap = new HashMap<>();
+
+        for (Object[] row : postLikeRepository.countLikesByPostIds(postIds)) {
+            Long postId = (Long) row[0];
+            Long count = (Long) row[1];
+
+            likeCountMap.put(postId, count);
+        }
+
+        // 2. 내가 좋아요 눌렀는지는 로그인 사용자일 때만 조회
+        Set<Long> likedSet = new HashSet<>();
+
+        boolean isLoginUser = authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
+
+        if (isLoginUser) {
+            String email = authentication.getName();
+
+            Long userId = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."))
+                    .getId();
+
+            likedSet.addAll(postLikeRepository.findLikedPostIdsByUser(userId, postIds));
+        }
+
+        // 3. 응답 DTO 조립
+        List<ResponsePostDto> content = postsList.stream()
+                .map(post -> ResponsePostDto.builder()
                         .id(post.getId())
                         .user_id(post.getUser().getId())
                         .name(post.getUser().getName())
@@ -91,8 +132,12 @@ public class PostService {
                         .image_url(post.getImgUrl())
                         .createdAt(post.getCreatedAt())
                         .updatedAt(post.getUpdatedAt())
+                        .likeCount(likeCountMap.getOrDefault(post.getId(), 0L))
+                        .likedByMe(likedSet.contains(post.getId()))
                         .build()
-        );
+                ).toList();
+
+        return new PageImpl<>(content, pageable, posts.getTotalElements());
     }
 
     //글 수정, 추후 본인이 작성한 글에 대한 수정이 가능하도록 변경
@@ -167,10 +212,10 @@ public class PostService {
             throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
         }
 
-        String objectKey = ociPostImageService.upload(postId, file);//->원문
-       // 얘를 다시 String objectKey = ociPostImageService.orElseThrow(()->new IllegalArgumentException("OCI업로드는 로컬에서 불가능합니다."))
-       //                 .upload(postId,file);
-       // post.setImgUrl(objectKey); // DB에는 objectKey 저장
+       String objectKey = ociPostImageService.upload(postId, file);//->원문
+//     String objectKey = ociPostImageService.orElseThrow(()->new IllegalArgumentException("OCI업로드는 로컬에서 불가능합니다."))
+//            .upload(postId,file);
+//     post.setImgUrl(objectKey); // DB에는 objectKey 저장
 
 
 
@@ -185,9 +230,9 @@ public class PostService {
         if (post.getImgUrl() == null || post.getImgUrl().isBlank()) {
             throw new IllegalArgumentException("이미지가 없습니다.");
         }
-        return ociPostImageService.createReadParUrl(post.getImgUrl()); //원문 -> 아래 지우고 원래대로
-        //return ociPostImageService
-               // .orElseThrow(()->new IllegalArgumentException("로컬에서 불가능")).createReadParUrl(post.getImgUrl());
+     return ociPostImageService.createReadParUrl(post.getImgUrl()); //원문 -> 아래 지우고 원래대로
+//       return ociPostImageService
+//               .orElseThrow(()->new IllegalArgumentException("로컬에서 불가능")).createReadParUrl(post.getImgUrl());
     }
 
     // 공통 응답 변환(핵심: objectKey 대신 조회용 URL 내려주기)

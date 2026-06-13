@@ -42,8 +42,9 @@ public class PostController {
             size = 10,
             sort = "createdAt",
             direction = Sort.Direction.ASC
-    ) Pageable pageable) {
-        Page<ResponsePostDto> responsePostDto = postService.getByAllPost(pageable);
+    ) Pageable pageable,
+      Authentication authentication) {
+        Page<ResponsePostDto> responsePostDto = postService.getByAllPost(pageable,authentication);
         return ResponseEntity.ok(responsePostDto);
     }
 

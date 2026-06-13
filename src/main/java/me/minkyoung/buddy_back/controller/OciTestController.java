@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oci")
-//@Profile("prod")
+//@Profile("prod") //서버 배포 후 수정본에서는 주석 지워주기
 public class OciTestController {
 
     private final ObjectStorageClient client;
