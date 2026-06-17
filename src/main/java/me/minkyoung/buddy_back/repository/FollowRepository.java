@@ -10,13 +10,13 @@ import java.util.Optional;
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     // 내가 상대를 팔로우 중인지 확인
-    boolean existsByFollowIdAndFollowingId(Long followId, Long followingId);
+    boolean existsByFollowerIdAndFollowingId(Long followId, Long followingId);
 
     // 언팔로우할 때 기존 Follow row 찾기
-    Optional<Follow> findByFollowIdAndFollowingId(Long followId, Long followingId);
+    Optional<Follow> findByFollowerIdAndFollowingId(Long followId, Long followingId);
 
     // 언팔로우 처리
-    void deleteByFollowIdAndFollowingId(Long followId, Long followingId);
+    void deleteByFollowerIdAndFollowingId(Long followId, Long followingId);
 
     // 해당 사용자를 팔로우하는 사람 수(팔로워 수)
     int countByFollowingId(Long followingId);

@@ -28,8 +28,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    //private final Optional<OciPostImageService>  ociPostImageService;
-   private final OciPostImageService  ociPostImageService;//원문
+//    private final Optional<OciPostImageService>  ociPostImageService;
+    private final OciPostImageService  ociPostImageService;//원문
     private final PostLikeRepository postLikeRepository;
 
     // 글 조회 ,글 생성, 글 수정, 글 삭제 기능
@@ -212,10 +212,12 @@ public class PostService {
             throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
         }
 
-       String objectKey = ociPostImageService.upload(postId, file);//->원문
-//     String objectKey = ociPostImageService.orElseThrow(()->new IllegalArgumentException("OCI업로드는 로컬에서 불가능합니다."))
+        String objectKey = ociPostImageService.upload(postId, file);//->원문
+
+//         String objectKey = ociPostImageService.orElseThrow(()->new IllegalArgumentException("OCI업로드는 로컬에서 불가능합니다."))
 //            .upload(postId,file);
-//     post.setImgUrl(objectKey); // DB에는 objectKey 저장
+
+        post.setImgUrl(objectKey); // DB에는 objectKey 저장
 
 
 

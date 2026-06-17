@@ -30,7 +30,7 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-   //private final Optional<OciPostImageService> ociPostImageService;
+//    private final Optional<OciPostImageService> ociPostImageService;
     private final OciPostImageService ociPostImageService;//원문
     private final PostLikeRepository postLikeRepository;
 

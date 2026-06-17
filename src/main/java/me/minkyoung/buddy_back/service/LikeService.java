@@ -2,7 +2,6 @@ package me.minkyoung.buddy_back.service;
 
 import lombok.RequiredArgsConstructor;
 import me.minkyoung.buddy_back.dto.LikeToggleResponseDto;
-import me.minkyoung.buddy_back.dto.ResponsePostDto;
 import me.minkyoung.buddy_back.entity.Post;
 import me.minkyoung.buddy_back.entity.PostsLikes;
 import me.minkyoung.buddy_back.entity.User;
@@ -10,9 +9,6 @@ import me.minkyoung.buddy_back.repository.CommentLikeRepository;
 import me.minkyoung.buddy_back.repository.PostLikeRepository;
 import me.minkyoung.buddy_back.repository.PostRepository;
 import me.minkyoung.buddy_back.repository.UserRepository;
-import org.apache.coyote.Response;
-import org.springframework.data.domain.Page;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
