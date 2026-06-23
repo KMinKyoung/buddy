@@ -18,7 +18,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     //글 목록 조회 -> 자동 정렬(프론트가 아닌 백엔드에서 Pageable을 이용한 정렬)
     Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    //내가 작성한 글 조회
+    //내가 작성한 글 조회 + 다른 사람이 작성한 글 조회
     Page<Post> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 
+    int countByUserId(Long userId);
 }

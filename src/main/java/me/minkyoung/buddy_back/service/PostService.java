@@ -198,11 +198,6 @@ public class PostService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        //이미지 업로드 문제 확인용
-        System.out.println("[UPLOAD] auth=" + (authentication == null ? "null" : authentication.getName()));
-        System.out.println("[UPLOAD] postUserId=" + post.getUser().getId() + ", loginUserId=" + user.getId());
-
-
         if (!post.getUser().getId().equals(user.getId())) {
             throw new org.springframework.security.access.AccessDeniedException("해당 게시물의 이미지를 수정할 수 없습니다.");
         }
