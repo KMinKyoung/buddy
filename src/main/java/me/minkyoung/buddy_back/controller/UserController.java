@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -59,5 +61,14 @@ public class UserController {
     public ResponseEntity<Page<MyPostLikeResponseDto>> myLikedPosts(Pageable pageable, Authentication authentication){
         Page<MyPostLikeResponseDto> result = myPageService.getMyLikePosts(pageable,authentication);
         return ResponseEntity.ok(result);
+    }
+
+    //유저 검색
+    @GetMapping("/search")
+    public ResponseEntity<List<UserSearchResponseDto>> searchUsers(
+            Authentication authentication,
+            @RequestParam String keyword
+    ) {
+        return ResponseEntity.ok(userService.searchUsers(authentication, keyword));
     }
 }

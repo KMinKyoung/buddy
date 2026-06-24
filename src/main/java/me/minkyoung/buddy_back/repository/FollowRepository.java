@@ -24,10 +24,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     // 해당 사용자가 팔로우하는 사람 수(팔로잉 수)
     int countByFollowerId(Long followerId);
 
-    // 팔로잉 목록
+    // 팔로워 목록
     Page<Follow> findByFollowerId(Long followerId, Pageable pageable);
 
-    // 팔로워 목록
+    // 팔로잉 목록
     Page<Follow> findByFollowingId(Long followingId, Pageable pageable);
 
 }

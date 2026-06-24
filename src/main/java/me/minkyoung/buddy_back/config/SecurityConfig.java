@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/oauth/**","/user/signup", "/user/login").permitAll() //로그인/회원가입, ㅐ며소 emd gjdyd
                         .requestMatchers(HttpMethod.GET,"/api/posts/**","/api/posts/{postId}/comments").permitAll()
                         .requestMatchers("/oci/**", "/api/oci/**").permitAll()// 글 조회는 인증 없이 허용
-                        .requestMatchers(HttpMethod.POST, "/api/posts/*/comments", "/api/posts/*/likes").authenticated() //이후로는 인증이 있어야지..명시적으로 수정
+                        .requestMatchers(HttpMethod.POST, "/api/posts/*/comments", "/api/posts/*/likes","/user/search").authenticated() //이후로는 인증이 있어야지..명시적으로 수정
                         .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*", "/api/posts/*/likes").authenticated()
                         .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
