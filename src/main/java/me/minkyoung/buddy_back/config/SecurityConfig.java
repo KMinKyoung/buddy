@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/posts/*/comments", "/api/posts/*/likes","/user/search").authenticated() //이후로는 인증이 있어야지..명시적으로 수정
                         .requestMatchers(HttpMethod.PUT, "/api/posts/*/comments/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/posts/*/comments/*", "/api/posts/*/likes").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/user/**").authenticated()
                         .requestMatchers("/ws-stomp/**").permitAll()
                         .requestMatchers("/api/chat/**").authenticated()
                         .requestMatchers("/api/walk-records", "/api/walk-records/**", "/api/steps/**", "/api/follows").authenticated()
