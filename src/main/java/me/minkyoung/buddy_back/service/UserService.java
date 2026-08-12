@@ -2,6 +2,7 @@ package me.minkyoung.buddy_back.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import me.minkyoung.buddy_back.domain.Provider;
 import me.minkyoung.buddy_back.domain.Role;
 import me.minkyoung.buddy_back.dto.SignUpRequestDto;
 import me.minkyoung.buddy_back.dto.UserSearchResponseDto;
@@ -34,6 +35,7 @@ public class UserService {
                 .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
                 .name(signUpRequestDto.getName())
                 .role(Role.USER)
+                .provider(Provider.LOCAL)
                 .build();
 
         return userRepository.save(user).getId();

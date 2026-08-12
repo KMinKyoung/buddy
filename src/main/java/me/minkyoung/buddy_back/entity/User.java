@@ -3,6 +3,7 @@ package me.minkyoung.buddy_back.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import me.minkyoung.buddy_back.domain.PenaltyStatus;
+import me.minkyoung.buddy_back.domain.Provider;
 import me.minkyoung.buddy_back.domain.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,7 +46,10 @@ public class User implements UserDetails {
     @Column(name = "penalty_end_at")
     private LocalDateTime penaltyEndAt;
 
-    private String provider;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", nullable = false)
+    private Provider provider;
+
     private String providerId;
 
     public void updatePenaltyStatus(PenaltyStatus penaltyStatus, LocalDateTime endAt) {

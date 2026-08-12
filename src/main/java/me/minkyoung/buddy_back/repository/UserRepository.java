@@ -1,5 +1,6 @@
 package me.minkyoung.buddy_back.repository;
 
+import me.minkyoung.buddy_back.domain.Provider;
 import me.minkyoung.buddy_back.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email); //이메일 존재 여부 확인
 
-    Optional<User> findByProviderAndProviderId(String provider, String providerId);
+    Optional<User> findByProviderAndProviderId(Provider provider, String providerId);
 
     // 이름으로 검색해서 채팅방 생성
     @Query("""
