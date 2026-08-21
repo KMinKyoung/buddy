@@ -1,9 +1,11 @@
 spring:
+  config:
+    import: file:./.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/buddy?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: root1234
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,6 +15,20 @@ spring:
 server:
   port: 8080
 
+oci:
+  region: ap-chuncheon-1
+  namespace: ${OCI_NAMESPACE}
+  bucket: buddy-bucket-20251221-0209
+  endpoint: https://objectstorage.ap-chuncheon-1.oraclecloud.com
+
+image:
+  par-expire-minutes: 10
+
+
+google:
+  oauth:
+    web-client-id: ${GOOGLE_WEB_CLIENT_ID}
+
 jwt:
   issuer: buddy # 실제 배포 이후 도메인으로 변경 예정
-  secret-key: YnVkZHktc2VjcmV0LWtleS1pcy12YWxpZC1kYXRhLWJ1dC1kaldqZmtyaA==
+  secret-key: ${JWT_SECRET_KEY}
